@@ -1,0 +1,72 @@
+﻿@model prjShoppingCar.Models.tProduct
+
+@{
+    ViewBag.Title = "新增產品";
+    Layout = "~/Views/Shared/_LayoutManage.cshtml";
+}
+
+<nav class="navbar navbar-light ">
+    <form class="container-fluid justify-content-start">
+        <p><a href="@Url.Action("released", "Manage")" class="btn btn-outline-success me-2">上架下架商品</a></p>
+        <p><a href="@Url.Action("AdjustProduct", "Manage")" class="btn btn-outline-success me-2">調整商品資訊</a></p>
+        <p><a href="@Url.Action("newProduct", "Manage")" class="btn btn-outline-success me-2">上傳新商品</a></p>
+        <p><a href="@Url.Action("DeleteProduct", "Manage")" class="btn btn-outline-success me-2">刪除商品</a></p>
+    </form>
+</nav>
+
+<form action="@Url.Action("newProduct")" method="post"
+      enctype="multipart/form-data">
+
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.fPId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.fPId, new { htmlAttributes = new { @class = "form-control" ,required = "required" } })
+                @Html.ValidationMessageFor(model => model.fPId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.fName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.fName, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                @Html.ValidationMessageFor(model => model.fName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.fPrice, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.fPrice, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                @Html.ValidationMessageFor(model => model.fPrice, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.fImg, htmlAttributes: new { @class = "control-label col-md-2", required = "required" })
+            <div class="col-md-10">
+                <input type="file" name="fproductImg" required="required"
+                       class="form-control" />
+            </div>
+        </div>
+
+        <div class="col-md-10">
+            <p style="color:red;">@ViewBag.Error</p>
+        </div>
+
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="新增產品" class="btn btn-primary mt-3" />
+            </div>
+        </div>
+    </div>
+
+</form>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>

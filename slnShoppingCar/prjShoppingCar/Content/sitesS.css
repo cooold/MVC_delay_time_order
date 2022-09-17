@@ -1,0 +1,46 @@
+﻿body {
+    padding-top: 50px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+
+
+/* raze 格式 class="container body-content*/
+
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.header {
+    height: 500px;
+    background-position: center center;
+    background-size: cover;
+}
+.imguse {
+    height: 360px;
+    width: 540px;
+    object-fit: cover;
+}
+
+.midd {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.stateImg {
+    height: 12px;
+    width : 12px;
+}
+
+
+

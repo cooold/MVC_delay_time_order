@@ -1,0 +1,95 @@
+﻿@{
+    ViewBag.Title = "管理者登入";
+    Layout = null;
+}
+
+
+<!doctype html>
+<html lang="en">
+<head>
+    <title>@ViewBag.Title - 實點</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="~/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/M_sign.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="~/images/favicon_1.ico" />
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+
+
+        .b-example-divider {
+            height: 3rem;
+            background-color: rgba(0, 0, 0, .1);
+            border: solid rgba(0, 0, 0, .15);
+            border-width: 1px 0;
+            box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+        }
+
+        .b-example-vr {
+            flex-shrink: 0;
+            width: 1.5rem;
+            height: 100vh;
+        }
+
+        .bi {
+            vertical-align: -.125em;
+            fill: currentColor;
+        }
+
+        .nav-scroller {
+            position: relative;
+            z-index: 2;
+            height: 2.75rem;
+            overflow-y: hidden;
+        }
+
+            .nav-scroller .nav {
+                display: flex;
+                flex-wrap: nowrap;
+                padding-bottom: 1rem;
+                margin-top: -1px;
+                overflow-x: auto;
+                text-align: center;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+            }
+    </style>
+
+    <link href="signin.css" rel="stylesheet">
+</head>
+<body class="text-center">
+
+    <main class="form-signin w-100 m-auto">
+
+        <img class="mb-4" src="~/images/10.png" alt="" width="72" height="57">
+
+        <form action="@Url.Action("M_Login")" method="post">
+            <h2>管理者登入</h2>
+            <div class="form-floating">
+                <input type="text" id="fUserId" name="fUserId" required="required" class="form-control" />
+                <label for="fUserId">username</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" id="fPwd" name="fPwd" required="required" class="form-control" />
+                <label for="fPwd">Password</label>
+            </div>
+            <p style="color:red;">@ViewBag.Message</p>
+
+            <input type="submit" value="登入" class="btn btn-primary" />
+
+
+        </form>
+    </main>
+
+    <script src="~/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+
+</body>
+</html>

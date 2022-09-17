@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = "調整產品";
+    Layout = "~/Views/Shared/_LayoutManage.cshtml";
+}
+
+<nav class="navbar navbar-light ">
+    <form class="container-fluid justify-content-start">
+        <p><a href="@Url.Action("released", "Manage")" class="btn btn-outline-success me-2">上架下架商品</a></p>
+        <p><a href="@Url.Action("AdjustProduct", "Manage")" class="btn btn-outline-success me-2">調整商品資訊</a></p>
+        <p><a href="@Url.Action("newProduct", "Manage")" class="btn btn-outline-success me-2">上傳新商品</a></p>
+        <p><a href="@Url.Action("DeleteProduct", "Manage")" class="btn btn-outline-success me-2">刪除商品</a></p>
+    </form>
+</nav>
+
+<div class="row justify-content-center">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 mt-3">
+            <div class="thumbnail">
+                <img src="~/images/@item.fImg" style="width:200px;height:270px;">
+                <div class="caption">
+                    <form action="@Url.Action("released")" method="post">
+                        <input type="hidden" id="fPId" name="fPId" required="required" readonly="readonly" class="form-control" value="@item.fPId" />
+                        <p>名稱：@item.fName</p>
+                        <p>單價：@item.fPrice</p>
+                        @if (item.pState == 0)
+                        {
+                            <p>目前狀態：上架中</p>
+                            <input type="submit" value="更改為缺貨中" class="btn btn-danger mt-3 " />
+                        }
+                        @if (item.pState == 1)
+                        {
+                            <p>目前狀態：缺貨中</p>
+                            <input type="submit" value="重新上架" class="btn btn-success mt-3 " />
+                        }
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>

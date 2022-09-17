@@ -1,0 +1,152 @@
+﻿@using prjShoppingCar.Models;
+@model dynamic
+
+@{
+    ViewBag.Title = "會員訂單列表";
+    Layout = "~/Views/Shared/_LayoutMember.cshtml";
+}
+
+<nav class="navbar navbar-light ">
+    <form class="container-fluid justify-content-start">
+        <p><a href="@Url.Action("OrderList", "Member")?state_all=0" class="btn btn-outline-primary me-2">今日訂單</a></p>
+        <p><a href="@Url.Action("OrderList", "Member")?state_all=1" class="btn btn-outline-primary me-2">所有訂單</a></p>
+    </form>
+</nav>
+
+<h2>會員訂單列表</h2>
+<p5>
+    <img class="stateImg" src="~/images/success1.png"> 表示訂單已確認 請準時抵達取餐<img /> <br />
+</p5>
+<p5>
+    <img class="stateImg" src="~/images/error.png"> 表示訂單已取消 因無法準時製作您的餐點 敬請見諒<img /> <br />
+</p5>
+<p5>
+    <img class="stateImg" src="~/images/wait.png"> 表示訂單尚未確認<img /> <br />
+</p5>
+<p5>
+    <img class="stateImg" src="~/images/complete.png"> 表示訂單已取餐付款<img /> <br />
+</p5>
+<table class="table">
+    <tr>
+        <th>
+            訂單編號
+        </th>
+        <th>
+            訂購人姓名
+        </th>
+        <th>
+            聯絡電話
+        </th>
+        <th>
+            訂購時間
+        </th>
+        <th>
+            取餐時間
+        </th>
+        <th>
+            可接受延遲時間
+        </th>
+        <th>
+            訂單備註
+        </th>
+
+    </tr>
+
+    @foreach (var item in Model.order)
+    {
+<tr data-bs-toggle="collapse" href="#collapseExample@(item.fOrderGuid)" role="button" aria-expanded="false" aria-controls="collapseExample@(item.fOrderGuid)">
+
+    <td>
+        @if (@item.fstate == 0)
+        {
+            <img class="stateImg" src="~/images/wait.png" />
+        }
+        @if (@item.fstate == 1)
+        {
+            <img class="stateImg" src="~/images/success1.png" />
+        }
+        @if (@item.fstate == 2)
+        {
+            <img class="stateImg" src="~/images/error.png" />
+        }
+        @if (@item.fstate == 3)
+        {
+            <img class="stateImg" src="~/images/complete.png" />
+        }
+        @item.fOrderGuid
+    </td>
+    <td>
+        @item.fReceiver
+    </td>
+    <td>
+        @item.fPhone
+    </td>
+    <td>
+        @item.fDate.ToString("yyyy-MM-dd")
+    </td>
+    <td>
+        @item.fGetTime
+    </td>
+    <td>
+        @item.delayRange
+    </td>
+    <td>
+        @item.fRemark
+    </td>
+
+</tr>
+        <tr>
+            <td colspan="7">
+                <div class="collapse" id="collapseExample@(item.fOrderGuid)">
+                    <div class="card card-body">
+                        <table class="table">
+                            <tr>
+                                <th>
+                                    產品編號
+                                </th>
+                                <th>
+                                    產品名稱
+                                </th>
+                                <th>
+                                    價格
+                                </th>
+                                <th>
+                                    數量
+                                </th>
+                            </tr>
+                            @foreach (var items in Model.tOrderDetail)
+                            {
+                                if (@item.fOrderGuid == @items.fOrderGuid)
+                                {
+                                    <tr>
+                                        <td>
+                                            @items.fPId
+                                        </td>
+                                        <td>
+                                            @items.fName
+                                        </td>
+                                        <td>
+                                            @items.fPrice
+                                        </td>
+                                        <td>
+                                            @items.fQty
+                                        </td>
+                                    </tr>
+
+                                }
+                            }
+                        </table>
+
+                        <div style="float:right;">
+                            <h5>
+                                總金額:$ @item.ftotal
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    }
+
+</table>
+

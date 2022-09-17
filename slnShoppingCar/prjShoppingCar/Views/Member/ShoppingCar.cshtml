@@ -1,0 +1,198 @@
+﻿@model IEnumerable<prjShoppingCar.Models.tOrderDetail>
+@using System.ComponentModel.DataAnnotations;
+@using System.Collections;
+
+@{
+    ViewBag.Title = "會員購物車清單";
+    Layout = "~/Views/Shared/_LayoutMember.cshtml";
+}
+
+@{
+    //現在時間
+    DateTime myDate = DateTime.Now;
+    string myDateStringDay = myDate.ToString("yyyy-MM-dd");
+
+    //放到select
+    ArrayList openTime = new ArrayList();
+
+    //現在小時 和分鐘
+    string NowtimeH = myDate.ToString("HH");
+    string Nowtimem = myDate.ToString("mm");
+
+    //處理分鐘格式
+    double settime = (int.Parse(Nowtimem));
+    settime = Math.Ceiling(settime / 10);
+    string oktime = (settime.ToString() + "0");
+    //如果 10點大於現在時間例如九點等於 開店前
+    if (10 >= int.Parse(NowtimeH))
+    {
+        for (int hour = 10; hour < 22; hour += 1)
+        {
+            for (int minute = 0; minute < 60; minute += 10)
+            {
+                if (minute == 0)
+                {
+                    openTime.Add(hour + ":" + "00");
+                }
+                else
+                {
+                    openTime.Add(hour + ":" + minute);
+                }
+            }
+        }
+    }
+    //如果 10點小於現在時間例如十一點等於 開店後
+    else
+    {
+        for (int hour = int.Parse(NowtimeH); hour < 22; hour += 1)
+        {
+            //如果是當下的小時
+            if (hour == int.Parse(NowtimeH))
+            {
+
+                for (int minute = int.Parse(oktime); minute < 60; minute += 10)
+                {
+                        if (minute == 0)
+                        {
+                            openTime.Add(hour + ":" + "00");
+                        }
+                        else
+                        {
+                            openTime.Add(hour + ":" + minute);
+                        }
+                }
+            }
+            else
+            {
+                for (int minute = 0; minute < 60; minute += 10)
+                {
+                    if (minute == 0)
+                    {
+                        openTime.Add(hour + ":" + "00");
+                    }
+                    else
+                    {
+                        openTime.Add(hour + ":" + minute);
+                    }
+                }
+            }
+        }
+    }
+
+
+    int totals = 0;
+    foreach (var item in Model)
+    {
+        totals = totals+ item.total;
+    }
+}
+
+<h2>會員購物車清單</h2>
+
+<table class="table mt-3">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.fName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.fPrice)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.fQty)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.fIsApproved)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.fName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.fPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.fQty)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.fIsApproved)
+            </td>
+            <td>
+                <a href="@Url.Action("DeleteCar")?fId=@item.fId"
+                   class="btn btn-danger">刪除</a>
+            </td>
+        </tr>
+
+    }
+
+</table>
+
+
+<form action="@Url.Action("ShoppingCar")" method="post">
+    <h4 align="right">總金額:@totals</h4>
+    <div class="form-horizontal mt-5">
+        <hr class="mt-5" />
+
+        <div class="form-group">
+            <div class="col-md-10">
+                <input type="hidden" id="ftotal" name="ftotal" class="form-control" readonly="readonly" value=@totals />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <span class="control-label col-md-2">訂購人姓名</span>
+            <div class="col-md-10">
+                <input type="text" id="fReceiver" name="fReceiver" required="required" class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <span class="control-label col-md-2">連絡電話</span>
+            <div class="col-md-10">
+                <input type="text" id="fPhone" name="fPhone" required="required" class="form-control" maxlength="10" minlength="10" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <span class="control-label col-md-2">預計取餐時間: @myDateStringDay</span>
+            <div class="col-md-10">
+                <select type="text" id="fGetTime" name="fGetTime" required="required" class="form-control">
+                    @foreach (string SeletTime in openTime)
+                    {
+                        <option value="@SeletTime">@SeletTime</option>
+                    }
+                </select>
+            </div>
+            <span>可接受延遲時間範圍:</span>
+            <input type="radio" name="delayRange" value="準時" checked="checked">準時
+            <input type="radio" name="delayRange" value="15分鐘內">15分鐘內
+            <input type="radio" name="delayRange" value="30分鐘內">30分鐘內
+            <p style="color:red;">注意！此為預計取餐時間，實際接單狀況為避免您等待將由店家決定</p>
+        </div>
+
+        <div class="form-group">
+            <span class="control-label col-md-2">訂單備註</span>
+            <div class="col-md-10">
+                <input type="text" id="fRemark" name="fRemark" class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <p style="color:red;">@ViewBag.StatusMessage </p>
+                @if (@totals != 0 && ViewBag.Status != 1)
+                {
+                    <input type="submit" value="確認訂購" class="btn btn-danger mt-3" />
+                }
+                else {
+            <button type="button" class="btn btn-secondary  mt-3" disabled>確認訂購</button>
+                }
+            </div>
+        </div>
+    </div>
+</form>
+

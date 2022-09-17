@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "刪除產品";
+    Layout = "~/Views/Shared/_LayoutManage.cshtml";
+}
+
+<nav class="navbar navbar-light ">
+    <form class="container-fluid justify-content-start">
+        <p><a href="@Url.Action("released", "Manage")" class="btn btn-outline-success me-2">上架下架商品</a></p>
+        <p><a href="@Url.Action("AdjustProduct", "Manage")" class="btn btn-outline-success me-2">調整商品資訊</a></p>
+        <p><a href="@Url.Action("newProduct", "Manage")" class="btn btn-outline-success me-2">上傳新商品</a></p>
+        <p><a href="@Url.Action("DeleteProduct", "Manage")" class="btn btn-outline-success me-2">刪除商品</a></p>
+    </form>
+</nav>
+
+<div class="row justify-content-center">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 mt-3">
+            <div class="thumbnail">
+                <img src="~/images/@item.fImg" style="width:200px;height:270px;">
+                <div class="caption">
+                        <p>名稱：@item.fName</p>
+                        <p>單價：@item.fPrice</p>
+                        <a href="@Url.Action("Delete")?fPId=@item.fPId"
+                           class="btn btn-danger mt-3"
+                           onclick="return confirm('確定要刪除此產品嗎?');">刪除</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
