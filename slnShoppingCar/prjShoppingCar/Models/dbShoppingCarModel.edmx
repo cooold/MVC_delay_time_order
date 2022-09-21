@@ -40,6 +40,7 @@
           <Property Name="ftotal" Type="int" />
           <Property Name="fstate" Type="int" />
           <Property Name="delayRange" Type="nchar" MaxLength="10" />
+          <Property Name="take_meal_number" Type="int" />
         </EntityType>
         <EntityType Name="tOrderDetail">
           <Key>
@@ -102,6 +103,7 @@
           <Property Name="fPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="fGetTime" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="delayRange" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="take_meal_number" Type="Int32" />
         </EntityType>
         <EntityType Name="tOrderDetail">
           <Key>
@@ -164,6 +166,7 @@
           <EntitySetMapping Name="tOrder">
             <EntityTypeMapping TypeName="dbShoppingCarModel.tOrder">
               <MappingFragment StoreEntitySet="tOrder">
+                <ScalarProperty Name="take_meal_number" ColumnName="take_meal_number" />
                 <ScalarProperty Name="delayRange" ColumnName="delayRange" />
                 <ScalarProperty Name="fGetTime" ColumnName="fGetTime" />
                 <ScalarProperty Name="fPhone" ColumnName="fPhone" />

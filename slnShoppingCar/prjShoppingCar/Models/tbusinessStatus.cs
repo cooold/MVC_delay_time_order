@@ -11,7 +11,7 @@ namespace prjShoppingCar.Models
 {
     using System;
     using System.Collections.Generic;
-    
+
     public partial class tbusinessStatus
     {
         public int bId { get; set; }

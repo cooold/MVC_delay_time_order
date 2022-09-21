@@ -53,5 +53,6 @@ namespace prjShoppingCar.Models
 
         [DisplayName("訂單狀態")]
         public int fstate { get; set; }
+        public Nullable<int> take_meal_number { get; set; }
     }
 }

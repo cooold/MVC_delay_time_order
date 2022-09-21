@@ -26,6 +26,7 @@
     <Property Name="fPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="fGetTime" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="delayRange" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="take_meal_number" Type="Int32" />
   </EntityType>
   <EntityType Name="tOrderDetail">
     <Key>

@@ -35,6 +35,7 @@
     <Property Name="ftotal" Type="int" />
     <Property Name="fstate" Type="int" />
     <Property Name="delayRange" Type="nchar" MaxLength="10" />
+    <Property Name="take_meal_number" Type="int" />
   </EntityType>
   <EntityType Name="tOrderDetail">
     <Key>

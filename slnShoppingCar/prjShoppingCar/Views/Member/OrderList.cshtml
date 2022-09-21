@@ -6,19 +6,14 @@
     Layout = "~/Views/Shared/_LayoutMember.cshtml";
 }
 
-<nav class="navbar navbar-light ">
-    <form class="container-fluid justify-content-start">
-        <p><a href="@Url.Action("OrderList", "Member")?state_all=0" class="btn btn-outline-primary me-2">今日訂單</a></p>
-        <p><a href="@Url.Action("OrderList", "Member")?state_all=1" class="btn btn-outline-primary me-2">所有訂單</a></p>
-    </form>
-</nav>
+
 
 <h2>會員訂單列表</h2>
 <p5>
     <img class="stateImg" src="~/images/success1.png"> 表示訂單已確認 請準時抵達取餐<img /> <br />
 </p5>
 <p5>
-    <img class="stateImg" src="~/images/error.png"> 表示訂單已取消 因無法準時製作您的餐點 敬請見諒<img /> <br />
+    <img class="stateImg" src="~/images/error.png"> 表示忙碌中 無法準時製作您的餐點 敬請見諒<img /> <br />
 </p5>
 <p5>
     <img class="stateImg" src="~/images/wait.png"> 表示訂單尚未確認<img /> <br />
@@ -29,7 +24,7 @@
 <table class="table">
     <tr>
         <th>
-            訂單編號
+            取餐編號
         </th>
         <th>
             訂購人姓名
@@ -73,7 +68,7 @@
         {
             <img class="stateImg" src="~/images/complete.png" />
         }
-        @item.fOrderGuid
+        @item.take_meal_number
     </td>
     <td>
         @item.fReceiver

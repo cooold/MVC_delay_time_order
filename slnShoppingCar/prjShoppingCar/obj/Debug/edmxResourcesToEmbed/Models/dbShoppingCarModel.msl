@@ -16,6 +16,7 @@
     <EntitySetMapping Name="tOrder">
       <EntityTypeMapping TypeName="dbShoppingCarModel.tOrder">
         <MappingFragment StoreEntitySet="tOrder">
+          <ScalarProperty Name="take_meal_number" ColumnName="take_meal_number" />
           <ScalarProperty Name="delayRange" ColumnName="delayRange" />
           <ScalarProperty Name="fGetTime" ColumnName="fGetTime" />
           <ScalarProperty Name="fPhone" ColumnName="fPhone" />
