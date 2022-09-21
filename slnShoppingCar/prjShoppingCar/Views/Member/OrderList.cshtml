@@ -6,7 +6,12 @@
     Layout = "~/Views/Shared/_LayoutMember.cshtml";
 }
 
-
+<nav class="navbar navbar-light ">
+    <form class="container-fluid justify-content-start">
+        <p><a href="@Url.Action("OrderList", "Member")?state_all=0" class="btn btn-outline-primary me-2">今日訂單</a></p>
+        <p><a href="@Url.Action("OrderList", "Member")?state_all=1" class="btn btn-outline-primary me-2">所有訂單</a></p>
+    </form>
+</nav>
 
 <h2>會員訂單列表</h2>
 <p5>
