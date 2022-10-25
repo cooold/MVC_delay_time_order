@@ -23,16 +23,16 @@
 
 <h2>會員訂單列表</h2>
 <p5>
-    <img class="stateImg" src="~/images/success1.png"> 表示訂單已確認 請準時抵達取餐<img /> <br />
-</p5>
-<p5>
-    <img class="stateImg" src="~/images/error.png"> 表示忙碌中 無法準時製作您的餐點 敬請見諒<img /> <br />
-</p5>
-<p5>
     <img class="stateImg" src="~/images/wait.png"> 表示訂單尚未確認<img /> <br />
 </p5>
 <p5>
+    <img class="stateImg" src="~/images/success1.png"> 表示訂單已確認 請準時抵達取餐<img /> <br />
+</p5>
+<p5>
     <img class="stateImg" src="~/images/complete.png"> 表示訂單已取餐付款<img /> <br />
+</p5>
+<p5>
+    <img class="stateImg" src="~/images/error.png"> 表示目前忙碌中 無法準時製作 訂單將被取消 請選擇其他時段或店家訂餐<img /> <br />
 </p5>
 <table class="table">
     <tr>
@@ -52,10 +52,10 @@
             訂購時間
         </th>
         <th>
-            取餐時間
+            訂單製作時間
         </th>
         <th>
-            可接受延遲時間
+            取餐時間
         </th>
         <th>
             訂單備註
@@ -98,10 +98,10 @@
         @item.fDate.ToString("yyyy-MM-dd")
     </td>
     <td>
-        @item.fGetTime
+        @item.orderTimes 分鐘
     </td>
     <td>
-        @item.delayRange
+        @item.fGetTime
     </td>
     <td>
         @item.fRemark

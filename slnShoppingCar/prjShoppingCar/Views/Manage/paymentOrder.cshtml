@@ -4,6 +4,14 @@
     ViewBag.Title = "會員訂單列表";
     Layout = "~/Views/Shared/_LayoutManage.cshtml";
 }
+@{
+    //現在時間
+    DateTime myDate = DateTime.Now;
+    //現在小時 和分鐘
+    string NowtimeH = myDate.ToString("HH");
+    string Nowtimem = myDate.ToString("mm");
+}
+
 <nav class="navbar navbar-light ">
     <form class="container-fluid justify-content-start">
         <p><a href="@Url.Action("newOrder", "Manage")?state_all=0" class="btn btn-outline-success me-2">新訂單</a></p>
@@ -23,16 +31,16 @@
 
 <h2>會員訂單列表</h2>
 <p5>
-    <img class="stateImg" src="~/images/success1.png"> 表示訂單已確認 請準時抵達取餐<img /> <br />
-</p5>
-<p5>
-    <img class="stateImg" src="~/images/error.png"> 表示忙碌中 無法準時製作您的餐點 敬請見諒<img /> <br />
-</p5>
-<p5>
     <img class="stateImg" src="~/images/wait.png"> 表示訂單尚未確認<img /> <br />
 </p5>
 <p5>
+    <img class="stateImg" src="~/images/success1.png"> 表示訂單已確認 請準時抵達取餐<img /> <br />
+</p5>
+<p5>
     <img class="stateImg" src="~/images/complete.png"> 表示訂單已取餐付款<img /> <br />
+</p5>
+<p5>
+    <img class="stateImg" src="~/images/error.png"> 表示目前忙碌中 無法準時製作 訂單將被取消 請選擇其他時段或店家訂餐<img /> <br />
 </p5>
 <table class="table">
     <tr>
@@ -52,10 +60,10 @@
             訂購時間
         </th>
         <th>
-            取餐時間
+            訂單製作時間
         </th>
         <th>
-            可接受延遲時間
+            取餐時間
         </th>
         <th>
             訂單備註
@@ -98,11 +106,37 @@
         @item.fDate.ToString("yyyy-MM-dd")
     </td>
     <td>
-        @item.fGetTime
+        @item.orderTimes 分鐘
     </td>
-    <td>
-        @item.delayRange
-    </td>
+    @{
+        //計算取餐時間是否到達
+        string getHour = @item.fGetTime.Substring(0, 2);
+        string getMinute = @item.fGetTime.Substring(3, 2);
+    }
+    @if (@item.fstate == 0 || @item.fstate == 2 || @ViewBag.OrderlistColor == 1)
+    {
+        <td>
+            @item.fGetTime
+        </td>
+    }
+    else if (int.Parse(@getHour) > int.Parse(@NowtimeH))
+    {
+        <td style="color:orange;">
+            @item.fGetTime
+        </td>
+    }
+    else if (int.Parse(@getMinute) > int.Parse(Nowtimem))
+    {
+        <td style="color:orange;">
+            @item.fGetTime
+        </td>
+    }
+    else
+    {
+        <td style="color:forestgreen;">
+            @item.fGetTime
+        </td>
+    }
     <td>
         @item.fRemark
     </td>
@@ -165,7 +199,7 @@
                             </div>
                         </div>
 
-                        
+
                     </div>
                 </div>
             </td>

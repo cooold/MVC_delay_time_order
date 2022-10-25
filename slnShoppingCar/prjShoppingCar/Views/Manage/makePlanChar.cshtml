@@ -1,0 +1,1272 @@
+﻿@model IEnumerable<prjShoppingCar.Models.tOrder>
+@using System.ComponentModel.DataAnnotations;
+@using System.Collections;
+
+@{
+    ViewBag.Title = "訂單時間圖表";
+    Layout = "~/Views/Shared/_LayoutManage.cshtml";
+}
+@{ 
+    //新二維的陣列 10分鐘 早十(10:00)到晚十(21:50)會有 12小時*6=72
+    string[,] stringArray = new string[100,72];
+    //計算出個別占用時間
+
+    foreach (var item in Model)
+    {
+        //取餐時間(10:20)
+        string getTime = item.fGetTime;
+        //取餐小時(10)
+        string getTimeHH = item.fGetTime.ToString().Substring(0, 2); ;
+        //取餐分鐘(20)
+        string getTimeMM = item.fGetTime.ToString().Substring(item.fGetTime.ToString().Length - 2);
+        //製作時間(390)(分鐘)
+        string makeTIme = item.orderTimes.ToString();
+        //整理成十分鐘為單位
+        string Tailnum = makeTIme.ToString().Substring(makeTIme.ToString().Length - 1);
+        //計算用製作時間
+        int computeMakeTime = 0;
+        //整理出計算時間
+        if (int.Parse(Tailnum) != 0)
+        {
+            computeMakeTime = int.Parse(makeTIme);
+            //加成整數
+            computeMakeTime = computeMakeTime + 10 - int.Parse(Tailnum);
+        }
+        else
+        {
+            computeMakeTime = int.Parse(makeTIme);
+        }
+
+        //計算取餐時間格子
+        //小時-10 看剩多少  10-10 =0   15-10=5
+        int ComputeGetTimeHH = int.Parse(getTimeHH) - 10;
+        //分鐘除10 看剩多少  30/10=3  20/10=2
+        int ComputeGetTimeMM = int.Parse(getTimeMM) / 10;
+
+        //放入取餐時間位置陣列
+        int arrayNums = ComputeGetTimeHH * 6 + ComputeGetTimeMM;
+        //確認二維陣列有元素嗎 放入 
+        //此次放入的二維位置
+        int useArraycount = 0;
+
+        //確認是否有元素 抓出沒有元素的二維
+        for (int i = 0; i < 100; i++)
+        {
+            int countNull = 0;
+            for (int iss = 0; iss < 72; iss++)
+            {
+                if (stringArray[i, iss] != null)
+                {
+                    countNull = 1;
+                }
+            }
+            if (countNull == 0)
+            {
+                useArraycount = i;
+                break;
+            }
+        }
+        //放入空的單號
+        stringArray[useArraycount, arrayNums] = item.take_meal_number.ToString();
+        int computeArrayNums = arrayNums;
+        //補充前面時間
+        for (int i =0; i< computeMakeTime/10;i++ )
+        {
+            // -1前一個開始補
+            computeArrayNums = computeArrayNums - 1;
+            //陣列不為第一個
+            if (computeArrayNums >= 0)
+            {
+                if (stringArray[useArraycount,computeArrayNums] == null)
+                {
+                    stringArray[useArraycount,computeArrayNums] = item.take_meal_number.ToString();
+                }
+            }
+        }
+    }
+
+    //整理每個時段訂單編號
+    string[] dispalyArray = new string[72];
+    for (int iss = 0; iss < 100; iss++)
+    {
+        for (int i = 0; i < 72; i++)
+        {
+            if(stringArray[iss, i] != null)
+            {
+                if (dispalyArray[i] != null)
+                {
+                    //每個時段加起來
+                    dispalyArray[i] = dispalyArray[i].ToString() +"，"+ stringArray[iss, i].ToString();
+                }
+                else
+                {
+                    dispalyArray[i] = stringArray[iss, i].ToString();
+                }
+            }
+        }
+    }
+}
+<div class="container mt-5 ">
+    <table class="table">
+        <tr>
+            <th>
+                時間
+            </th>
+            <th>
+                訂單
+            </th>
+        </tr>
+        <tr>
+            <td>
+                10:00
+            </td>
+            @if (@dispalyArray[0] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[0]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                10:10
+            </td>
+            @if (@dispalyArray[1] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[1]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                10:20
+            </td>
+            @if (@dispalyArray[2] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[2]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                10:30
+            </td>
+            @if (@dispalyArray[3] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[3]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                10:40
+            </td>
+            @if (@dispalyArray[4] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[4]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                10:50
+            </td>
+            @if (@dispalyArray[5] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[5]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                11:00
+            </td>
+            @if (@dispalyArray[6] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[6]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                11:10
+            </td>
+            @if (@dispalyArray[7] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[7]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                11:20
+            </td>
+            @if (@dispalyArray[8] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[8]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                11:30
+            </td>
+            @if (@dispalyArray[9] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[9]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                11:40
+            </td>
+            @if (@dispalyArray[10] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[10]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                11:50
+            </td>
+            @if (@dispalyArray[11] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[11]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                12:00
+            </td>
+            @if (@dispalyArray[12] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[12]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                12:10
+            </td>
+            @if (@dispalyArray[13] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[13]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                12:20
+            </td>
+            @if (@dispalyArray[14] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[14]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                12:30
+            </td>
+            @if (@dispalyArray[15] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[15]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                12:40
+            </td>
+            @if (@dispalyArray[16] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[16]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                12:50
+            </td>
+            @if (@dispalyArray[17] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[17]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                13:00
+            </td>
+            @if (@dispalyArray[18] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[18]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                13:10
+            </td>
+            @if (@dispalyArray[19] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[19]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                13:20
+            </td>
+            @if (@dispalyArray[20] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[20]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                13:30
+            </td>
+            @if (@dispalyArray[21] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[21]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                13:40
+            </td>
+            @if (@dispalyArray[22] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[22]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                13:50
+            </td>
+            @if (@dispalyArray[23] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[23]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                14:00
+            </td>
+            @if (@dispalyArray[24] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[24]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                14:10
+            </td>
+            @if (@dispalyArray[25] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[25]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                14:20
+            </td>
+            @if (@dispalyArray[26] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[26]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                14:30
+            </td>
+            @if (@dispalyArray[27] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[27]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                14:40
+            </td>
+            @if (@dispalyArray[28] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[28]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                14:50
+            </td>
+            @if (@dispalyArray[29] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[29]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                15:00
+            </td>
+            @if (@dispalyArray[30] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[30]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                15:10
+            </td>
+            @if (@dispalyArray[31] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[31]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                15:20
+            </td>
+            @if (@dispalyArray[32] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[32]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                15:30
+            </td>
+            @if (@dispalyArray[33] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[33]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                15:40
+            </td>
+            @if (@dispalyArray[34] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[34]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                15:50
+            </td>
+            @if (@dispalyArray[35] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[35]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                16:00
+            </td>
+            @if (@dispalyArray[36] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[36]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                16:10
+            </td>
+            @if (@dispalyArray[37] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[37]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                16:20
+            </td>
+            @if (@dispalyArray[38] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[38]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                16:30
+            </td>
+            @if (@dispalyArray[39] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[39]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                16:40
+            </td>
+            @if (@dispalyArray[40] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[40]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                16:50
+            </td>
+            @if (@dispalyArray[41] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[41]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                17:00
+            </td>
+            @if (@dispalyArray[42] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[42]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                17:10
+            </td>
+            @if (@dispalyArray[43] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[43]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                17:20
+            </td>
+            @if (@dispalyArray[44] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[44]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                17:30
+            </td>
+            @if (@dispalyArray[45] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[45]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                17:40
+            </td>
+            @if (@dispalyArray[46] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[46]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                17:50
+            </td>
+            @if (@dispalyArray[47] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[47]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                18:00
+            </td>
+            @if (@dispalyArray[48] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[48]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                18:10
+            </td>
+            @if (@dispalyArray[49] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[49]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                18:20
+            </td>
+            @if (@dispalyArray[50] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[50]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                18:30
+            </td>
+            @if (@dispalyArray[51] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[51]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                18:40
+            </td>
+            @if (@dispalyArray[52] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[52]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                18:50
+            </td>
+            @if (@dispalyArray[53] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[53]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                19:00
+            </td>
+            @if (@dispalyArray[54] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[54]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                19:10
+            </td>
+            @if (@dispalyArray[55] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[55]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                19:20
+            </td>
+            @if (@dispalyArray[56] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[56]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                19:30
+            </td>
+            @if (@dispalyArray[57] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[57]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                19:40
+            </td>
+            @if (@dispalyArray[58] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[58]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                19:50
+            </td>
+            @if (@dispalyArray[59] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[59]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                20:00
+            </td>
+            @if (@dispalyArray[60] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[60]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                20:10
+            </td>
+            @if (@dispalyArray[61] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[61]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                20:20
+            </td>
+            @if (@dispalyArray[62] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[62]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                20:30
+            </td>
+            @if (@dispalyArray[63] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[63]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                20:40
+            </td>
+            @if (@dispalyArray[64] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[64]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                20:50
+            </td>
+            @if (@dispalyArray[65] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[65]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                21:00
+            </td>
+            @if (@dispalyArray[66] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[66]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                21:10
+            </td>
+            @if (@dispalyArray[67] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[67]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                21:20
+            </td>
+            @if (@dispalyArray[68] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[68]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                21:30
+            </td>
+            @if (@dispalyArray[69] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[69]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                21:40
+            </td>
+            @if (@dispalyArray[70] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[70]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+        <tr>
+            <td>
+                21:50
+            </td>
+            @if (@dispalyArray[71] != null)
+            {
+                <td style="color:red">
+                    製作訂單編號:@dispalyArray[71]
+                </td>
+            }
+            else
+            {
+                <td>
+                </td>
+            }
+        </tr>
+    </table>
+</div>

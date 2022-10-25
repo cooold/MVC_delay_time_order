@@ -25,8 +25,8 @@
     <Property Name="fstate" Type="Int32" />
     <Property Name="fPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="fGetTime" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="delayRange" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
     <Property Name="take_meal_number" Type="Int32" />
+    <Property Name="orderTimes" Type="Int32" />
   </EntityType>
   <EntityType Name="tOrderDetail">
     <Key>
@@ -40,6 +40,7 @@
     <Property Name="fPrice" Type="Int32" />
     <Property Name="fQty" Type="Int32" />
     <Property Name="fIsApproved" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="fmakeTime" Type="Int32" />
   </EntityType>
   <EntityType Name="tProduct">
     <Key>
@@ -51,6 +52,7 @@
     <Property Name="fPrice" Type="Int32" />
     <Property Name="fImg" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="pState" Type="Int32" />
+    <Property Name="makeTImes" Type="Int32" />
   </EntityType>
   <EntityContainer Name="dbShoppingCarEntities" annotation:LazyLoadingEnabled="true">
     <EntitySet Name="tMember" EntityType="Self.tMember" />

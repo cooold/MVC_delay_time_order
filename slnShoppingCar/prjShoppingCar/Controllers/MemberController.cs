@@ -92,6 +92,7 @@ namespace prjShoppingCar.Controllers
                 orderDetail.fName = product.fName;
                 orderDetail.fPrice = (int)product.fPrice;
                 orderDetail.fQty = num;
+                orderDetail.fmakeTime = product.makeTImes;
                 orderDetail.fIsApproved = "否";
                 db.tOrderDetail.Add(orderDetail);
             }
@@ -122,7 +123,7 @@ namespace prjShoppingCar.Controllers
 
         //Post:Member/ShoppingCar
         [HttpPost]
-        public ActionResult ShoppingCar(string fReceiver, string fPhone, string fGetTime, string fRemark,int ftotal,string delayRange)
+        public ActionResult ShoppingCar(string fReceiver, string fPhone, string fGetTime, string fRemark,int ftotal,int totalsTime)
         {
             //找出會員帳號並指定給fUserId
             string fUserId = User.Identity.Name;
@@ -157,10 +158,10 @@ namespace prjShoppingCar.Controllers
             order.fReceiver = fReceiver;
             order.fPhone = fPhone;
             order.fGetTime = fGetTime;
-            order.delayRange = delayRange;
             order.fRemark = fRemark;
             order.ftotal = ftotal;
             order.fstate = 0;
+            order.orderTimes = totalsTime;
             order.fDate = DateTime.Today;
             db.tOrder.Add(order);
             //找出目前會員在訂單明細中是購物車狀態的產品
@@ -191,6 +192,7 @@ namespace prjShoppingCar.Controllers
             dynamic mix = new ExpandoObject();
             if (state_all == 0)
             {
+                ViewBag.OrderlistColor = 0;
                 //今日訂單
                 mix.order = db.tOrder.Where(m => m.fUserId == fUserId && m.fDate == myDate)
                 .OrderByDescending(m => m.fDate).ToList();
@@ -199,7 +201,8 @@ namespace prjShoppingCar.Controllers
             }
             else
             {
-                //今日訂單
+                ViewBag.OrderlistColor = 1;
+                //所有訂單
                 mix.order = db.tOrder.Where(m => m.fUserId == fUserId)
                 .OrderByDescending(m => m.fDate).ToList();
                 mix.tOrderDetail = db.tOrderDetail

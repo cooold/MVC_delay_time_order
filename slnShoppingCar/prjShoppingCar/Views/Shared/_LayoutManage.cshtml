@@ -10,7 +10,12 @@
     <script src="~/SweetAlert/sweetalert2.all.min.js"></script>
     <link rel="stylesheet" href="~/SweetAlert/sweetalert2.min.css" />
     <link rel="icon" type="image/x-icon" href="~/images/favicon_1.ico" />
+    <!--
 
+    author:LIANG-YOU
+    ver52
+    https://github.com/cooold/MVC_delay_time_order
+    -->
 </head>
 <body>
 
@@ -24,6 +29,9 @@
                 <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
                     <li class="nav-item">
                         <p class="nav-link">@Session["WelCome"]</p>
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("訂單時間圖表", "makePlanChar", "Manage", new { @class = "nav-link" })
                     </li>
                     <li class="nav-item">
                         <a href="@Url.Action("newOrder", "Manage")?state_all=0" class="nav-link">查看訂單</a>
@@ -59,7 +67,7 @@
 
     <footer class="bg-light mt-5 py-5">
         <div class="container">
-            <div class="text-dark p3">實點<br>&copy; @DateTime.Now  </div>
+            <div class="text-white p3">實點<br>電話:02-29392152<br>&copy; @DateTime.Now  </div>
         </div>
     </footer>
 

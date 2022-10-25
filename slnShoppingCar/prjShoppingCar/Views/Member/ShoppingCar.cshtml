@@ -8,6 +8,18 @@
 }
 
 @{
+    int totals = 0;
+    foreach (var item in Model)
+    {
+        totals = totals + item.total;
+    }
+
+    int totalsTime = 0;
+    foreach (var item in Model)
+    {
+        totalsTime = totalsTime + item.totalTime;
+    }
+
     //現在時間
     DateTime myDate = DateTime.Now;
     string myDateStringDay = myDate.ToString("yyyy-MM-dd");
@@ -52,14 +64,14 @@
 
                 for (int minute = int.Parse(oktime); minute < 60; minute += 10)
                 {
-                        if (minute == 0)
-                        {
-                            openTime.Add(hour + ":" + "00");
-                        }
-                        else
-                        {
-                            openTime.Add(hour + ":" + minute);
-                        }
+                    if (minute == 0)
+                    {
+                        openTime.Add(hour + ":" + "00");
+                    }
+                    else
+                    {
+                        openTime.Add(hour + ":" + minute);
+                    }
                 }
             }
             else
@@ -79,16 +91,66 @@
         }
     }
 
-
-    int totals = 0;
-    foreach (var item in Model)
+    int houradd = 0;
+    //目標時間
+    int goalTime = int.Parse(Nowtimem) + totalsTime;
+    int goalMinute = 0;
+    //進位
+    if (goalTime >= 60)
     {
-        totals = totals+ item.total;
+        int remaining = goalTime;
+        if (remaining >= 60)
+        {
+
+            houradd = goalTime / 60;
+            remaining = goalTime - 60* houradd;
+
+        }
+        goalMinute = remaining;
+    }
+    else
+    {
+        int remaining = goalTime;
+        goalMinute = remaining;
+    }
+    //新陣列
+    ArrayList displayTime = new ArrayList();
+    int computeH=0;
+    int computeM=0;
+
+
+    //開店後 動作
+
+
+
+    for (int i = 0; i < openTime.Count; i++)
+    {
+        //把原本陣列時間放進來
+        string computeHour = openTime[i].ToString().Substring(0, 2);
+        string computesMinute = openTime[i].ToString().Substring(openTime[i].ToString().Length - 2);
+
+        //轉型
+        computeH = int.Parse(computeHour);
+        computeM = int.Parse(computesMinute);
+
+        if (computeH >= int.Parse(NowtimeH) + houradd)
+        {
+            //如果進位出的小時 分鐘符合放入
+            if (computeH == int.Parse(NowtimeH) + houradd && computeM >= goalMinute)
+            {
+                displayTime.Add(openTime[i]);
+            }
+            //其他小時
+            else if (computeH > int.Parse(NowtimeH) + houradd )
+            {
+                displayTime.Add(openTime[i]);
+            }
+        }
+
+
     }
 }
-
 <h2>會員購物車清單</h2>
-
 <table class="table mt-3">
     <tr>
         <th>
@@ -101,7 +163,7 @@
             @Html.DisplayNameFor(model => model.fQty)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.fIsApproved)
+            @Html.DisplayNameFor(model => model.fmakeTime)
         </th>
         <th></th>
     </tr>
@@ -119,7 +181,7 @@
                 @Html.DisplayFor(modelItem => item.fQty)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.fIsApproved)
+                @Html.DisplayFor(modelItem => item.fmakeTime)分鐘
             </td>
             <td>
                 <a href="@Url.Action("DeleteCar")?fId=@item.fId"
@@ -133,6 +195,7 @@
 
 
 <form action="@Url.Action("ShoppingCar")" method="post">
+    <h5 align="left">全部所需時間: @totalsTime 分鐘</h5>
     <h4 align="right">總金額:@totals</h4>
     <div class="form-horizontal mt-5">
         <hr class="mt-5" />
@@ -140,6 +203,7 @@
         <div class="form-group">
             <div class="col-md-10">
                 <input type="hidden" id="ftotal" name="ftotal" class="form-control" readonly="readonly" value=@totals />
+                <input type="hidden" id="totalsTime" name="totalsTime" class="form-control" readonly="readonly" value=@totalsTime />
             </div>
         </div>
 
@@ -161,17 +225,12 @@
             <span class="control-label col-md-2">預計取餐時間: @myDateStringDay</span>
             <div class="col-md-10">
                 <select type="text" id="fGetTime" name="fGetTime" required="required" class="form-control">
-                    @foreach (string SeletTime in openTime)
+                    @foreach (string SeletTime in displayTime)
                     {
                         <option value="@SeletTime">@SeletTime</option>
                     }
                 </select>
             </div>
-            <span>可接受延遲時間範圍:</span>
-            <input type="radio" name="delayRange" value="準時" checked="checked">準時
-            <input type="radio" name="delayRange" value="15分鐘內">15分鐘內
-            <input type="radio" name="delayRange" value="30分鐘內">30分鐘內
-            <p style="color:red;">注意！此為預計取餐時間，實際接單狀況為避免您等待將由店家決定</p>
         </div>
 
         <div class="form-group">
@@ -188,8 +247,9 @@
                 {
                     <input type="submit" value="確認訂購" class="btn btn-danger mt-3" />
                 }
-                else {
-            <button type="button" class="btn btn-secondary  mt-3" disabled>確認訂購</button>
+                else
+                {
+                    <button type="button" class="btn btn-secondary  mt-3" disabled>確認訂購</button>
                 }
             </div>
         </div>

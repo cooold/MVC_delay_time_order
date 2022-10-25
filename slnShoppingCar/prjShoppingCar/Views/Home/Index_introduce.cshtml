@@ -14,20 +14,21 @@
                 <div class="caption">
                     <h4>@item.fName</h4>
                     <p>單價：@item.fPrice</p>
+                    <p>製作時間：@item.makeTImes 分鐘</p>
                     @if (item.pState == 0)
                     {
-                    <select class="mb-3 " id="value@(item.fPId)">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                    </select>
+                        <select class="mb-3 " id="value@(item.fPId)">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
                         <a onclick="sendAlert(this)" id="@item.fPId" class="btn btn-warning">加入購物車</a>
                     }
                     @if (item.pState == 1)

@@ -31,6 +31,15 @@ namespace prjShoppingCar.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        //製作時間圖表
+        public ActionResult makePlanChar()
+        {
+            //抓出已經接受訂單
+            var adjust = db.tOrder.Where(m => m.fstate == 1 && m.fDate == myDate)
+                .OrderByDescending(m => m.fDate).ToList();
+            return View(adjust);
+        }
+
         public ActionResult setBusinessStatus()
         {
             //取得最新一筆狀態
@@ -203,6 +212,7 @@ namespace prjShoppingCar.Controllers
 
             if (state_all == 0)
             {
+
                 //今日訂單
                 dynamic mix = new ExpandoObject();
                 mix.order = db.tOrder.Where(m => m.fDate == myDate)
@@ -228,9 +238,10 @@ namespace prjShoppingCar.Controllers
 
             if (state_all == 0)
             {
-                //今日訂單
+                ViewBag.OrderlistColor = 0;
+                //今日訂單 用網站選狀態
                 dynamic mix = new ExpandoObject();
-                mix.order = db.tOrder.Where(m => m.fstate == 0 && m.fDate == myDate)
+                mix.order = db.tOrder.Where(m => m.fDate == myDate)
                         .OrderByDescending(m => m.fDate).ToList();
                 mix.tOrderDetail = db.tOrderDetail
                     .ToList();
@@ -238,7 +249,8 @@ namespace prjShoppingCar.Controllers
             }
             else
             {
-                //今日訂單
+                ViewBag.OrderlistColor = 1;
+                //所有訂單
                 dynamic mix = new ExpandoObject();
                 mix.order = db.tOrder.Where(m => m.fstate == 0)
                         .OrderByDescending(m => m.fDate).ToList();
@@ -253,6 +265,7 @@ namespace prjShoppingCar.Controllers
         {
             if (state_all == 0)
             {
+                ViewBag.OrderlistColor = 0;
                 //今日訂單
                 dynamic mix = new ExpandoObject();
                 mix.order = db.tOrder.Where(m => m.fstate == 1 && m.fDate == myDate)
@@ -263,6 +276,7 @@ namespace prjShoppingCar.Controllers
             }
             else
             {
+                ViewBag.OrderlistColor = 1;
                 //所有訂單
                 dynamic mix = new ExpandoObject();
                 mix.order = db.tOrder.Where(m => m.fstate == 1)

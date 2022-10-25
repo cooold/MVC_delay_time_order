@@ -6,7 +6,7 @@
     <edmx:Diagrams>
       <Diagram DiagramId="9a19e2203d6945d38165e87a1db2c63a" Name="Diagram1">
         <EntityTypeShape EntityType="dbShoppingCarModel.tMember" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="dbShoppingCarModel.tOrder" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbShoppingCarModel.tOrder" Width="1.75" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="dbShoppingCarModel.tOrderDetail" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="dbShoppingCarModel.tProduct" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="dbShoppingCarModel.tbusinessStatus" Width="1.5" PointX="8.5" PointY="0.875" />

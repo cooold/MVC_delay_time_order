@@ -16,8 +16,8 @@
     <EntitySetMapping Name="tOrder">
       <EntityTypeMapping TypeName="dbShoppingCarModel.tOrder">
         <MappingFragment StoreEntitySet="tOrder">
+          <ScalarProperty Name="orderTimes" ColumnName="orderTimes" />
           <ScalarProperty Name="take_meal_number" ColumnName="take_meal_number" />
-          <ScalarProperty Name="delayRange" ColumnName="delayRange" />
           <ScalarProperty Name="fGetTime" ColumnName="fGetTime" />
           <ScalarProperty Name="fPhone" ColumnName="fPhone" />
           <ScalarProperty Name="fstate" ColumnName="fstate" />
@@ -34,6 +34,7 @@
     <EntitySetMapping Name="tOrderDetail">
       <EntityTypeMapping TypeName="dbShoppingCarModel.tOrderDetail">
         <MappingFragment StoreEntitySet="tOrderDetail">
+          <ScalarProperty Name="fmakeTime" ColumnName="fmakeTime" />
           <ScalarProperty Name="fId" ColumnName="fId" />
           <ScalarProperty Name="fOrderGuid" ColumnName="fOrderGuid" />
           <ScalarProperty Name="fUserId" ColumnName="fUserId" />
@@ -48,6 +49,7 @@
     <EntitySetMapping Name="tProduct">
       <EntityTypeMapping TypeName="dbShoppingCarModel.tProduct">
         <MappingFragment StoreEntitySet="tProduct">
+          <ScalarProperty Name="makeTImes" ColumnName="makeTImes" />
           <ScalarProperty Name="pState" ColumnName="pState" />
           <ScalarProperty Name="fId" ColumnName="fId" />
           <ScalarProperty Name="fPId" ColumnName="fPId" />

@@ -38,11 +38,21 @@ namespace prjShoppingCar.Models
         [DisplayName("是否為訂單")]
         public string fIsApproved { get; set; }
 
+        [DisplayName("製作時間")]
+        public int fmakeTime { get; set; }
         public int total
         {
             get
             {
                 return fPrice * fQty;
+            }
+        }
+
+        public int totalTime
+        {
+            get
+            {
+                return fmakeTime * fQty;
             }
         }
     }

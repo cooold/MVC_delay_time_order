@@ -13,10 +13,13 @@ namespace prjShoppingCar.Models
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
-
+    using System.Linq;
 
     public partial class tOrder
     {
+        //建立可存取dbShoppingCar.mdf 資料庫的dbShoppingCarEntities 類別物件db
+        dbShoppingCarEntities db = new dbShoppingCarEntities();
+        DateTime myDate = DateTime.Today;
         public int fId { get; set; }
 
         [DisplayName("訂單編號")]
@@ -44,9 +47,6 @@ namespace prjShoppingCar.Models
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
         public DateTime? fDate { get; set; }
 
-        [DisplayName("可接受延誤時間")]
-        public string delayRange { get; set; }
-
         [DisplayName("總金額")]
         public int ftotal { get; set; }
 
@@ -54,5 +54,8 @@ namespace prjShoppingCar.Models
         [DisplayName("訂單狀態")]
         public int fstate { get; set; }
         public Nullable<int> take_meal_number { get; set; }
+
+        public int orderTimes { get; set; }
+
     }
 }

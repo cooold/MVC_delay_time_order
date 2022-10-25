@@ -34,8 +34,8 @@
     <Property Name="fRemark" Type="nvarchar" MaxLength="50" />
     <Property Name="ftotal" Type="int" />
     <Property Name="fstate" Type="int" />
-    <Property Name="delayRange" Type="nchar" MaxLength="10" />
     <Property Name="take_meal_number" Type="int" />
+    <Property Name="orderTimes" Type="int" />
   </EntityType>
   <EntityType Name="tOrderDetail">
     <Key>
@@ -49,6 +49,7 @@
     <Property Name="fPrice" Type="int" />
     <Property Name="fQty" Type="int" />
     <Property Name="fIsApproved" Type="nvarchar" MaxLength="10" />
+    <Property Name="fmakeTime" Type="int" />
   </EntityType>
   <EntityType Name="tProduct">
     <Key>
@@ -60,6 +61,7 @@
     <Property Name="fPrice" Type="int" />
     <Property Name="fImg" Type="nvarchar" MaxLength="50" />
     <Property Name="pState" Type="int" />
+    <Property Name="makeTImes" Type="int" />
   </EntityType>
   <EntityContainer Name="dbShoppingCarModelStoreContainer">
     <EntitySet Name="tbusinessStatus" EntityType="Self.tbusinessStatus" Schema="dbo" store:Type="Tables" />

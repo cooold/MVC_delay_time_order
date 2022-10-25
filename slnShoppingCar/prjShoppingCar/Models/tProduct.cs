@@ -30,5 +30,7 @@ namespace prjShoppingCar.Models
         public string fImg { get; set; }
 
         public int pState { get; set; }
+
+        public int makeTImes { get; set; }
     }
 }

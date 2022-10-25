@@ -4,6 +4,190 @@
     ViewBag.Title = "會員訂單列表";
     Layout = "~/Views/Shared/_LayoutManage.cshtml";
 }
+@{
+    int testnum = 0;
+    //推薦說明
+    string recommend = "時間內尚無訂單，建議接取。";
+    //現在時間
+    DateTime myDate = DateTime.Now;
+    //現在小時 和分鐘
+    string NowtimeH = myDate.ToString("HH");
+    string Nowtimem = myDate.ToString("mm");
+
+    //新二維的陣列 10分鐘 早十(10:00)到晚十(21:50)會有 12小時*6=72
+    string[,] stringArray = new string[100, 72];
+    //計算出個別占用時間
+
+    foreach (var item in Model.order)
+    {
+        if (item.fstate == 1)
+        {
+            //取餐時間(10:20)
+            string getTime = item.fGetTime;
+            //取餐小時(10)
+            string getTimeHH = item.fGetTime.ToString().Substring(0, 2); ;
+            //取餐分鐘(20)
+            string getTimeMM = item.fGetTime.ToString().Substring(item.fGetTime.ToString().Length - 2);
+            //製作時間(390)(分鐘)
+            string makeTIme = item.orderTimes.ToString();
+            //整理成十分鐘為單位
+            string Tailnum = makeTIme.ToString().Substring(makeTIme.ToString().Length - 1);
+            //計算用製作時間
+            int computeMakeTime = 0;
+            //整理出計算時間
+            if (int.Parse(Tailnum) != 0)
+            {
+                computeMakeTime = int.Parse(makeTIme);
+                //加成整數
+                computeMakeTime = computeMakeTime + 10 - int.Parse(Tailnum);
+            }
+            else
+            {
+                computeMakeTime = int.Parse(makeTIme);
+            }
+
+            //計算取餐時間格子
+            //小時-10 看剩多少  10-10 =0   15-10=5
+            int ComputeGetTimeHH = int.Parse(getTimeHH) - 10;
+            //分鐘除10 看剩多少  30/10=3  20/10=2
+            int ComputeGetTimeMM = int.Parse(getTimeMM) / 10;
+
+            //放入取餐時間位置陣列
+            int arrayNums = ComputeGetTimeHH * 6 + ComputeGetTimeMM;
+            //確認二維陣列有元素嗎 放入 
+            //此次放入的二維位置
+            int useArraycount = 0;
+
+            //確認是否有元素 抓出沒有元素的二維
+            for (int i = 0; i < 100; i++)
+            {
+                int countNull = 0;
+                for (int iss = 0; iss < 72; iss++)
+                {
+                    if (stringArray[i, iss] != null)
+                    {
+                        countNull = 1;
+                    }
+                }
+                if (countNull == 0)
+                {
+                    useArraycount = i;
+                    break;
+                }
+            }
+            //放入空的單號
+            stringArray[useArraycount, arrayNums] = item.take_meal_number.ToString();
+            int computeArrayNums = arrayNums;
+            //補充前面時間
+            for (int i = 0; i < computeMakeTime / 10; i++)
+            {
+                // -1前一個開始補
+                computeArrayNums = computeArrayNums - 1;
+                //陣列不為第一個
+                if (computeArrayNums >= 0)
+                {
+                    if (stringArray[useArraycount, computeArrayNums] == null)
+                    {
+                        stringArray[useArraycount, computeArrayNums] = item.take_meal_number.ToString();
+                    }
+                }
+            }
+        }
+    }
+
+    //整理每個時段訂單編號
+    string[] dispalyArray = new string[72];
+    for (int iss = 0; iss < 100; iss++)
+    {
+        for (int i = 0; i < 72; i++)
+        {
+            if (stringArray[iss, i] != null)
+            {
+                if (dispalyArray[i] != null)
+                {
+                    //每個時段加起來
+                    dispalyArray[i] = dispalyArray[i].ToString() + "，" + stringArray[iss, i].ToString();
+                }
+                else
+                {
+                    dispalyArray[i] = stringArray[iss, i].ToString();
+                }
+            }
+        }
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //計算最新那一單的時間
+    string newOrderGetTime = "";
+    string newOrderorderTime = "";
+    foreach (var itemes in Model.order)
+    {
+        if (@itemes.fstate == 0)
+        {
+            //抓出第一單
+            newOrderGetTime = itemes.fGetTime;
+            newOrderorderTime = itemes.orderTimes.ToString();
+
+            //用前面的計算
+            //取餐時間(10:20)
+            string getTime = itemes.fGetTime;
+            //取餐小時(10)
+            string getTimeHH = itemes.fGetTime.ToString().Substring(0, 2); ;
+            //取餐分鐘(20)
+            string getTimeMM = itemes.fGetTime.ToString().Substring(itemes.fGetTime.ToString().Length - 2);
+            //製作時間(390)(分鐘)
+            string makeTIme = itemes.orderTimes.ToString();
+            //整理成十分鐘為單位
+            string Tailnum = makeTIme.ToString().Substring(makeTIme.ToString().Length - 1);
+            //計算用製作時間
+            int computeMakeTime = 0;
+            //整理出計算時間
+            if (int.Parse(Tailnum) != 0)
+            {
+                computeMakeTime = int.Parse(makeTIme);
+                //加成整數
+                computeMakeTime = computeMakeTime + 10 - int.Parse(Tailnum);
+            }
+            else
+            {
+                computeMakeTime = int.Parse(makeTIme);
+            }
+
+            //計算取餐時間格子
+            //小時-10 看剩多少  10-10 =0   15-10=5
+            int ComputeGetTimeHH = int.Parse(getTimeHH) - 10;
+            //分鐘除10 看剩多少  30/10=3  20/10=2
+            int ComputeGetTimeMM = int.Parse(getTimeMM) / 10;
+
+            //要放入的時間
+            int arrayNums = ComputeGetTimeHH * 6 + ComputeGetTimeMM;
+            //確認取餐時間點有沒有元素
+            if (dispalyArray[arrayNums] != null)
+            {
+                recommend = "時間訂有其他訂單，請確認。";
+            }
+            int computeArrayNums = arrayNums;
+            //製作時間除10看幾格
+            int arrayMakenum = computeMakeTime / 10;
+
+            for (int i = 0; i < arrayMakenum; i++)
+            {
+                // -1前一個開始補
+                computeArrayNums = computeArrayNums - 1;
+                //陣列不為第一個
+                if (computeArrayNums >= 0)
+                {
+                    if (dispalyArray[computeArrayNums] != null)
+                    {
+                        recommend = "時間訂有其他訂單，請確認。";
+                        break;
+                    }
+                }
+            }
+            testnum = arrayMakenum;
+            break;
+        }
+    }
+}
 
 <nav class="navbar navbar-light ">
     <form class="container-fluid justify-content-start">
@@ -21,19 +205,18 @@
         <p><a href="@Url.Action("newOrder", "Manage")?state_all=1" class="btn btn-outline-primary me-2">所有訂單</a></p>
     </form>
 </nav>
-
 <h2>會員訂單列表</h2>
-<p5>
-    <img class="stateImg" src="~/images/success1.png"> 表示訂單已確認 請準時抵達取餐<img /> <br />
-</p5>
-<p5>
-    <img class="stateImg" src="~/images/error.png"> 表示忙碌中 無法準時製作您的餐點 敬請見諒<img /> <br />
-</p5>
 <p5>
     <img class="stateImg" src="~/images/wait.png"> 表示訂單尚未確認<img /> <br />
 </p5>
 <p5>
+    <img class="stateImg" src="~/images/success1.png"> 表示訂單已確認 請準時抵達取餐<img /> <br />
+</p5>
+<p5>
     <img class="stateImg" src="~/images/complete.png"> 表示訂單已取餐付款<img /> <br />
+</p5>
+<p5>
+    <img class="stateImg" src="~/images/error.png"> 表示目前忙碌中 無法準時製作 訂單將被取消 請選擇其他時段或店家訂餐<img /> <br />
 </p5>
 <table class="table">
     <tr>
@@ -53,10 +236,10 @@
             訂購時間
         </th>
         <th>
-            取餐時間
+            訂單製作時間
         </th>
         <th>
-            可接受延遲時間
+            取餐時間
         </th>
         <th>
             訂單備註
@@ -65,114 +248,159 @@
 
     @foreach (var item in Model.order)
     {
-<tr data-bs-toggle="collapse" href="#collapseExample@(item.fOrderGuid)" role="button" aria-expanded="false" aria-controls="collapseExample@(item.fOrderGuid)">
+        if (@item.fstate == 0)
+        {
+            <tr data-bs-toggle="collapse" href="#collapseExample@(item.fOrderGuid)" role="button" aria-expanded="false" aria-controls="collapseExample@(item.fOrderGuid)">
 
-    <td>
-        @if (@item.fstate == 0)
-        {
-            <img class="stateImg" src="~/images/wait.png" />
-        }
-        @if (@item.fstate == 1)
-        {
-            <img class="stateImg" src="~/images/success1.png" />
-        }
-        @if (@item.fstate == 2)
-        {
-            <img class="stateImg" src="~/images/error.png" />
-        }
-        @if (@item.fstate == 3)
-        {
-            <img class="stateImg" src="~/images/complete.png" />
-        }
-        @item.take_meal_number
-    </td>
-    <td>
-        @item.fUserId
-    </td>
-    <td>
-        @item.fReceiver
-    </td>
-    <td>
-        @item.fPhone
-    </td>
-    <td>
-        @item.fDate.ToString("yyyy-MM-dd")
-    </td>
-    <td>
-        @item.fGetTime
-    </td>
-    <td>
-        @item.delayRange
-    </td>
-    <td>
-        @item.fRemark
-    </td>
-</tr>
+                <td>
+                    @if (@item.fstate == 0)
+                    {
+                        <img class="stateImg" src="~/images/wait.png" />
+                    }
+                    @if (@item.fstate == 1)
+                    {
+                        <img class="stateImg" src="~/images/success1.png" />
+                    }
+                    @if (@item.fstate == 2)
+                    {
+                        <img class="stateImg" src="~/images/error.png" />
+                    }
+                    @if (@item.fstate == 3)
+                    {
+                        <img class="stateImg" src="~/images/complete.png" />
+                    }
+                    @item.take_meal_number
+                </td>
+                <td>
+                    @item.fUserId
+                </td>
+                <td>
+                    @item.fReceiver
+                </td>
+                <td>
+                    @item.fPhone
+                </td>
+                <td>
+                    @item.fDate.ToString("yyyy-MM-dd")
+                </td>
+                <td>
+                    @item.orderTimes 分鐘
+                </td>
+                @{
+                    //計算取餐時間是否到達
+                    string getHour = @item.fGetTime.Substring(0, 2);
+                    string getMinute = @item.fGetTime.Substring(3, 2);
+                }
+                @if (@ViewBag.OrderlistColor == 1)
+                {
+                    <td>
+                        @item.fGetTime
+                    </td>
+                }
+                else if (int.Parse(@getHour) > int.Parse(@NowtimeH))
+                {
+                    <td style="color:orange;">
+                        @item.fGetTime
+                    </td>
+                }
+                else if (int.Parse(@getMinute) > int.Parse(Nowtimem))
+                {
+                    <td style="color:orange;">
+                        @item.fGetTime
+                    </td>
+                }
+                else
+                {
+                    <td style="color:forestgreen;">
+                        @item.fGetTime
+                    </td>
+                }
+                <td>
+                    @item.fRemark
+                </td>
+            </tr>
 
 
-        <tr >
-            <td colspan="7">
-                <div class="collapse.in" id="collapseExample@(item.fOrderGuid)">
-                    <div class="card card-body">
-                        <table class="table">
-                            <tr>
-                                <th>
-                                    產品編號
-                                </th>
-                                <th>
-                                    產品名稱
-                                </th>
-                                <th>
-                                    價格
-                                </th>
-                                <th>
-                                    數量
-                                </th>
-                            </tr>
-                            @foreach (var items in Model.tOrderDetail)
-                            {
-                                if (@item.fOrderGuid == @items.fOrderGuid)
+            <tr>
+                <td colspan="7">
+                    <div class="collapse.in" id="collapseExample@(item.fOrderGuid)">
+                        <div class="card card-body">
+                            <table class="table">
+                                <tr>
+                                    <th>
+                                        產品編號
+                                    </th>
+                                    <th>
+                                        產品名稱
+                                    </th>
+                                    <th>
+                                        價格
+                                    </th>
+                                    <th>
+                                        數量
+                                    </th>
+                                </tr>
+                                @foreach (var items in Model.tOrderDetail)
                                 {
-                                    <tr>
-                                        <td>
-                                            @items.fPId
-                                        </td>
-                                        <td>
-                                            @items.fName
-                                        </td>
-                                        <td>
-                                            @items.fPrice
-                                        </td>
-                                        <td>
-                                            @items.fQty
-                                        </td>
-                                    </tr>
+                                    if (@item.fOrderGuid == @items.fOrderGuid)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @items.fPId
+                                            </td>
+                                            <td>
+                                                @items.fName
+                                            </td>
+                                            <td>
+                                                @items.fPrice
+                                            </td>
+                                            <td>
+                                                @items.fQty
+                                            </td>
+                                        </tr>
 
+                                    }
                                 }
-                            }
-                        </table>
+                            </table>
 
-                        <div class="container">
-                            <div class="row justify-content-start">
-                                <div class="col-4">
-                                    <h5>
-                                        總金額:$ @item.ftotal
-                                    </h5>
-                                </div>
-                                <div class="col-4">
-                                    <p><a href="@Url.Action("acceptOrder_new", "Manage")?fOrderGuid=@item.fOrderGuid" class="btn btn-warning">接受訂單</a></p>
-                                </div>
-                                <div class="col-4">
-                                    <p><a href="@Url.Action("removeOrders_new", "Manage")?fOrderGuid=@item.fOrderGuid" class="btn btn-danger">取消訂單</a></p>
+                            <div class="container">
+                                <div class="row justify-content-start">
+                                    <div class="col-4">
+                                        <h5>
+                                            總金額:$ @item.ftotal
+                                        </h5>
+                                    </div>
+                                    <div class="col-4">
+                                        <p><a href="@Url.Action("acceptOrder_new", "Manage")?fOrderGuid=@item.fOrderGuid" class="btn btn-warning">接受訂單</a></p>
+                                    </div>
+                                    <div class="col-4">
+                                        <p><a href="@Url.Action("removeOrders_new", "Manage")?fOrderGuid=@item.fOrderGuid" class="btn btn-danger">取消訂單</a></p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+
+                            <div class="container">
+                                <div class="row justify-content-start" >
+                                    <div class="col-4">
+                                        @if (@recommend == "時間內尚無訂單，建議接取。")
+                                        {
+                                            <img src="~/images/acceptOrder.png" height="30" widtth="30"/> @recommend
+                                        }
+                                        else
+                                        {
+                                            <img src="~/images/warning.png" height="30" widtth="30"/> @recommend
+                                        }
+                                    </div>
+                                </div>
+                            </div>
 
 
                         </div>
                     </div>
-            </td>
-        </tr>
+                </td>
+            </tr>
+        }
+
     }
 
 </table>
