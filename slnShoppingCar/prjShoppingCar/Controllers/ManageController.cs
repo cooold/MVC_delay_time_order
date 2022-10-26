@@ -101,6 +101,7 @@ namespace prjShoppingCar.Controllers
                     product.fPId = vproduct.fPId;
                     product.fName = vproduct.fName;
                     product.fPrice = vproduct.fPrice;
+                    product.makeTImes = vproduct.makeTImes;
                     product.pState = 0;
                     product.fImg = fileName;
                     db.tProduct.Add(product);
@@ -147,7 +148,7 @@ namespace prjShoppingCar.Controllers
             return View(products);
         }
         [HttpPost]
-        public ActionResult AdjustProduct(string fPId,string fName,int fPrice)
+        public ActionResult AdjustProduct(string fPId,string fName,int fPrice,int makeTImes)
         {
             //查詢產品編號
             var adjust = db.tProduct
@@ -158,6 +159,7 @@ namespace prjShoppingCar.Controllers
             {
                 item.fName = fName;
                 item.fPrice = fPrice;
+                item.makeTImes = makeTImes;
             }
             //更新資料庫，異動tOrder和tOrderDetail
             //完成訂單主檔和訂單明細的更新

@@ -31,6 +31,7 @@ namespace prjShoppingCar.Models
 
         public int pState { get; set; }
 
+        [DisplayName("製作時間")]
         public int makeTImes { get; set; }
     }
 }
